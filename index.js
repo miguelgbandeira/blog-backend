@@ -25,7 +25,7 @@ app.use(
     saveUninitialized: false,
   })
 );
-
+app.use(express.json());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
@@ -63,8 +63,8 @@ app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   next();
 });
-app.get("/", (req, res) => res.send("Hello World"));
 app.use("/login", authRouter);
-// app.use("/posts", postsRouter);
+app.use("/posts", postsRouter);
+app.get("/", (req, res) => res.send("Hello World"));
 
 app.listen(3000, () => console.log("app listening on port 3000!"));

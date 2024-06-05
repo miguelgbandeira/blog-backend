@@ -8,7 +8,6 @@ const PostSchema = new Schema({
   publishedOn: { type: Date, required: true },
   lastEditedOn: { type: Date, required: true },
   isPublic: { type: Boolean, required: true, default: true },
-  comments: { type: [Schema.Types.ObjectId], ref: "Comment", default: [] },
 });
 
 PostSchema.virtual("url").get(() => `/post/${this._id}`);
