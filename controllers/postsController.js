@@ -1,5 +1,6 @@
 const Post = require("../models/post");
 const User = require("../models/user");
+const jwt = require("jsonwebtoken");
 
 exports.get_posts = async (req, res) => {
   try {
@@ -13,23 +14,32 @@ exports.get_posts = async (req, res) => {
   }
 };
 
-exports.save_post = async (req, res) => {
+exports.save_post = async (req, res, next) => {
   try {
-    // const author = await User.findById(req.body.authorId).exec();
-    const newPost = new Post({
-      title: req.body.title,
-      body: req.body.body,
-      author: req.body.authorId,
-      publishedOn: new Date(),
-      lastEditedOn: new Date(),
-      isPublic: req.body.isPublic !== undefined ? req.body.isPublic : true,
+    jwt.verify(req.token, process.env.JWT_SECRET, async (err, authData) => {
+      if (err) return res.status(403).json(err);
+
+      req.authData = authData;
+
+      const newPost = new Post({
+        title: req.body.title,
+        body: req.body.body,
+        author: req.authData._id,
+        publishedOn: new Date(),
+        lastEditedOn: new Date(),
+        isPublic: req.body.isPublic !== undefined ? req.body.isPublic : true,
+      });
+
+      try {
+        const savedPost = await newPost.save();
+        res.status(201).json(savedPost);
+      } catch (e) {
+        console.error("Error saving post:", e);
+        res.status(500).json({ message: "Internal Server Error" });
+      }
     });
-
-    const savedPost = await newPost.save();
-
-    res.status(201).json(savedPost);
   } catch (e) {
-    console.error("Error saving post:", e);
+    console.error("Unexpected error:", e);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
