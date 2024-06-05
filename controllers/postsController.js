@@ -15,11 +15,11 @@ exports.get_posts = async (req, res) => {
 
 exports.save_post = async (req, res) => {
   try {
-    const author = await User.findById(req.body.authorId).exec();
+    // const author = await User.findById(req.body.authorId).exec();
     const newPost = new Post({
       title: req.body.title,
       body: req.body.body,
-      author: author,
+      author: req.body.authorId,
       publishedOn: new Date(),
       lastEditedOn: new Date(),
       isPublic: req.body.isPublic !== undefined ? req.body.isPublic : true,
