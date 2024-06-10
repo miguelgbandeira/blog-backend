@@ -5,6 +5,7 @@ const passport = require("passport");
 const mongoose = require("mongoose");
 const User = require("./models/user");
 const bcrypt = require("bcrypt");
+const cors = require("cors");
 
 const postsRouter = require("./routes/posts");
 const authRouter = require("./routes/auth");
@@ -26,6 +27,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(cors());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
