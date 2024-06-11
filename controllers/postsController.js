@@ -27,6 +27,7 @@ exports.savePost = async (req, res, next) => {
       const newPost = new Post({
         title: req.body.title,
         body: req.body.body,
+        image: req.body.image,
         author: req.authData._id,
         authorName: user.full_name,
         publishedOn: new Date(),
@@ -76,6 +77,7 @@ exports.editPost = async (req, res, next) => {
       const updateFields = {
         title: req.body.title,
         body: req.body.body,
+        image: req.body.image,
         lastEditedOn: new Date(),
         isPublic: req.body.isPublic,
       };
